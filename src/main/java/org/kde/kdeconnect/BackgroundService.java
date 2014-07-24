@@ -17,9 +17,13 @@ import org.kde.kdeconnect.Backends.LanBackend.LanLinkProvider;
 import org.kde.kdeconnect.Backends.VpnBackend.VpnLinkProvider;
 import org.kde.kdeconnect.UserInterface.MainSettingsActivity;
 
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
@@ -72,9 +76,30 @@ public class BackgroundService extends Service {
         //    linkProviders.add(new LoopbackLinkProvider(this));
         //}
 
+
+        try {
+            NetworkInterface ni;
+            Enumeration allni = NetworkInterface.getNetworkInterfaces();
+            while (allni.hasMoreElements()) {
+                ni = (NetworkInterface)allni.nextElement();
+                if (ni.getName().equals("tun0")) {
+                    Log.v("BackgroundService", "VPN is connected with interface " + ni.getName());
+                    for (InterfaceAddress ia : ni.getInterfaceAddresses()) {
+                        Log.v("BackgroundService", "address: " + ia.getAddress());
+                        Log.v("BackgroundService", "broadcast: " + ia.getBroadcast());
+                        Log.v("BackgroundService", "prefix length: " + ia.getNetworkPrefixLength());
+                    }
+                    linkProviders.add(new VpnLinkProvider(this));
+                    break;
+                }
+            }
+        } catch (SocketException se) {
+            Log.e("BackgroundService", "Socket exception while enumerating interfaces");
+            se.printStackTrace();
+        }
+
         if (settings.getBoolean("lan_link", true)) {
             linkProviders.add(new LanLinkProvider(this));
-            linkProviders.add(new VpnLinkProvider(this));
         }
 
     }
