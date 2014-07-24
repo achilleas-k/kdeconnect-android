@@ -78,18 +78,12 @@ public class BackgroundService extends Service {
 
 
         try {
-            NetworkInterface ni;
-            Enumeration allni = NetworkInterface.getNetworkInterfaces();
-            while (allni.hasMoreElements()) {
-                ni = (NetworkInterface)allni.nextElement();
-                if (ni.getName().equals("tun0")) {
-                    Log.v("BackgroundService", "VPN is connected with interface " + ni.getName());
-                    for (InterfaceAddress ia : ni.getInterfaceAddresses()) {
-                        Log.v("BackgroundService", "address: " + ia.getAddress());
-                        Log.v("BackgroundService", "broadcast: " + ia.getBroadcast());
-                        Log.v("BackgroundService", "prefix length: " + ia.getNetworkPrefixLength());
-                    }
-                    linkProviders.add(new VpnLinkProvider(this));
+            NetworkInterface netif;
+            Enumeration allif = NetworkInterface.getNetworkInterfaces();
+            while (allif.hasMoreElements()) {
+                netif = (NetworkInterface)allif.nextElement();
+                if (netif.getName().equals("tun0")) {
+                    linkProviders.add(new VpnLinkProvider(this, netif));
                     break;
                 }
             }
