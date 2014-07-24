@@ -24,6 +24,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 
@@ -35,6 +37,7 @@ public class VpnLinkProvider extends BaseLinkProvider {
     private final HashMap<String, VpnLink> visibleComputers = new HashMap<String, VpnLink>();
     private final LongSparseArray<VpnLink> nioSessions = new LongSparseArray<VpnLink>();
 
+    private NetworkInterface networkInterface = null;
     private NioSocketAcceptor tcpAcceptor = null;
     private NioDatagramAcceptor udpAcceptor = null;
 
@@ -176,9 +179,10 @@ public class VpnLinkProvider extends BaseLinkProvider {
         }
     }
 
-    public VpnLinkProvider(Context context) {
+    public VpnLinkProvider(Context context, NetworkInterface networkInterface) {
 
         this.context = context;
+        this.networkInterface = networkInterface;
 
         //This handles the case when I'm the new device in the network and somebody answers my introduction package
         tcpAcceptor = new NioSocketAcceptor();
@@ -211,9 +215,10 @@ public class VpnLinkProvider extends BaseLinkProvider {
         //This handles the case when I'm the existing device in the network and receive a "hello" UDP package
 
         udpAcceptor.setHandler(udpHandler);
+        InetAddress deviceVpnIp = networkInterface.getInterfaceAddresses().get(0).getAddress();
 
         try {
-            udpAcceptor.bind(new InetSocketAddress("10.8.0.101", port));
+            udpAcceptor.bind(new InetSocketAddress(deviceVpnIp, port));
         } catch(Exception e) {
             Log.e("VpnLinkProvider", "Error: Could not bind udp socket");
             e.printStackTrace();
@@ -223,7 +228,7 @@ public class VpnLinkProvider extends BaseLinkProvider {
         int tcpPort = port;
         while(!success) {
             try {
-                tcpAcceptor.bind(new InetSocketAddress("10.8.0.101", tcpPort));
+                tcpAcceptor.bind(new InetSocketAddress(deviceVpnIp, tcpPort));
                 success = true;
             } catch(Exception e) {
                 tcpPort++;
