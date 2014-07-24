@@ -235,8 +235,6 @@ public class VpnLinkProvider extends BaseLinkProvider {
             }
         }
 
-        Log.i("LanLinkProvider","Using tcp address"+tcpAcceptor.getLocalAddress().toString());
-        Log.i("LanLinkProvider","Using udp address"+udpAcceptor.getLocalAddress().toString());
         Log.i("VpnLinkProvider","Using tcpPort "+tcpPort);
 
         //I'm on a new network, let's be polite and introduce myself
