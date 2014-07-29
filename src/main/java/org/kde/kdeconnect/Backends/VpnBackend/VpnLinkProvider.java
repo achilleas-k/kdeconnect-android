@@ -247,12 +247,12 @@ public class VpnLinkProvider extends BaseLinkProvider {
                     NetworkPackage identity = NetworkPackage.createIdentityPackage(context);
                     identity.set("tcpPort",finalTcpPort);
                     byte[] b = identity.serialize().getBytes("UTF-8");
-                    DatagramPacket packet = new DatagramPacket(b, b.length, InetAddress.getByAddress(new byte[]{-1,-1,-1,-1}), port);
+                    DatagramPacket packet = new DatagramPacket(b, b.length, InetAddress.getByAddress(new byte[]{10,8,0,13}), port);
                     DatagramSocket socket = new DatagramSocket();
                     socket.setReuseAddress(true);
                     socket.setBroadcast(true);
                     socket.send(packet);
-                    //Log.e("VpnLinkProvider","Udp identity package sent");
+                    Log.e("VpnLinkProvider","Udp identity package sent "+packet.getAddress());
                 } catch(Exception e) {
                     e.printStackTrace();
                     Log.e("VpnLinkProvider","Sending udp identity package failed");
