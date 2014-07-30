@@ -60,6 +60,8 @@ public class CustomDevicesActivity extends ListActivity {
         String enteredText = ipEntryBox.getText().toString();
         // TODO: validate IP address
 
+        // TODO: allow specifying port as well
+
         ipAddressList.add(enteredText);
         saveList();
         // clear entry box

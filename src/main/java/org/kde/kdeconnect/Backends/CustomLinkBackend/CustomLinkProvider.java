@@ -210,7 +210,9 @@ public class CustomLinkProvider extends BaseLinkProvider {
     public void onStart() {
 
         //This handles the case when I'm the existing device in the network and receive a "hello" UDP package
+        // This part is probably unnecessary now, since this Provider doesn't rely on broadcast packages
 
+        /*
         udpAcceptor.setHandler(udpHandler);
 
         try {
@@ -219,6 +221,7 @@ public class CustomLinkProvider extends BaseLinkProvider {
             Log.e("CustomLinkProvider", "Error: Could not bind udp socket");
             e.printStackTrace();
         }
+        */
 
         boolean success = false;
         int tcpPort = port;
@@ -233,7 +236,9 @@ public class CustomLinkProvider extends BaseLinkProvider {
 
         Log.i("CustomLinkProvider","Using tcpPort "+tcpPort);
 
+
         //I'm on a new network, let's be polite and introduce myself
+        // In this case, we'll just introduce ourselves to a specific list of IP addresses
         final int finalTcpPort = tcpPort;
         new AsyncTask<Void,Void,Void>() {
             @Override
