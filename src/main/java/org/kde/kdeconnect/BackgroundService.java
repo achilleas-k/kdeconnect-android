@@ -74,6 +74,8 @@ public class BackgroundService extends Service {
 
         if (settings.getBoolean("lan_link", true)) {
             linkProviders.add(new LanLinkProvider(this));
+        }
+        if (settings.getBoolean("custom_link", true)) {
             linkProviders.add(new CustomLinkProvider(this));
         }
 

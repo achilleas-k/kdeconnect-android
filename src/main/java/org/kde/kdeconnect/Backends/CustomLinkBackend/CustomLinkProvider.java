@@ -25,6 +25,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CustomLinkProvider extends BaseLinkProvider {
@@ -237,17 +238,22 @@ public class CustomLinkProvider extends BaseLinkProvider {
         new AsyncTask<Void,Void,Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-
                 try {
-                    NetworkPackage identity = NetworkPackage.createIdentityPackage(context);
-                    identity.set("tcpPort",finalTcpPort);
-                    byte[] b = identity.serialize().getBytes("UTF-8");
-                    DatagramPacket packet = new DatagramPacket(b, b.length, InetAddress.getByAddress(new byte[]{-1,-1,-1,-1}), port);
-                    DatagramSocket socket = new DatagramSocket();
-                    socket.setReuseAddress(true);
-                    socket.setBroadcast(true);
-                    socket.send(packet);
-                    //Log.e("CustomLinkProvider","Udp identity package sent");
+                    ArrayList<InetAddress> clientlist = new ArrayList<InetAddress>();
+                    clientlist.add(InetAddress.getByAddress(new byte[]{10, 8, 0, 13}));
+                    clientlist.add(InetAddress.getByAddress(new byte[]{10, 8, 0, 100}));
+                    for (InetAddress client : clientlist) {
+
+                        NetworkPackage identity = NetworkPackage.createIdentityPackage(context);
+                        identity.set("tcpPort", finalTcpPort);
+                        byte[] b = identity.serialize().getBytes("UTF-8");
+                        DatagramPacket packet = new DatagramPacket(b, b.length, client, port);
+                        DatagramSocket socket = new DatagramSocket();
+                        socket.setReuseAddress(true);
+                        socket.setBroadcast(true);
+                        socket.send(packet);
+                        Log.e("CustomLinkProvider","Udp identity package sent to address "+packet.getAddress());
+                    }
                 } catch(Exception e) {
                     e.printStackTrace();
                     Log.e("CustomLinkProvider","Sending udp identity package failed");
