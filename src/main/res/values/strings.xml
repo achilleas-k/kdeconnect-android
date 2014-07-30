@@ -79,5 +79,8 @@
     <string name="device_name_preference_summary">%s</string>
     <string name="invalid_device_name">Invalid device name</string>
     <string name="shareplugin_text_saved">Received text, saved to clipboard</string>
+    <string name="custom_devices_settings">Custom device list</string>
+    <string name="custom_device_list">Custom device list</string>
+    <string name="custom_device_list_summary">Custom device list</string>
 
 </resources>
