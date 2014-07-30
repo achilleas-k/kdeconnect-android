@@ -1,22 +1,19 @@
 package org.kde.kdeconnect.UserInterface;
 
-import android.annotation.TargetApi;
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import org.kde.kdeconnect.BackgroundService;
 import org.kde.kdeconnect_tp.R;
 
 import java.util.ArrayList;
@@ -26,30 +23,64 @@ public class CustomDevicesActivity extends ListActivity {
     public static final String KEY_CUSTOM_DEVLIST_PREFERENCE  = "device_list_preference";
     private static final String IP_DELIM = "::";
 
-    String[] iplist = new String[] {"10.8.0.13", "10.8.0.100"};
+    ArrayList<String> ipAddressList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //initializeDeviceList(this);
-
+        initializeDeviceList(this);
         setContentView(R.layout.custom_ip_list);
-        //ArrayAdapter adapter = new ArrayAdapter<String>(this,
-        //                R.layout.custom_ip_list, iplist);
-        setListAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, iplist));
+        setListAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, ipAddressList));
 
-        //ListView listView = (ListView) findViewById(R.id.ip_addr_list);
 
-        //listView.setAdapter(adapter);
-
+        EditText ipEntryBox = (EditText)findViewById(R.id.ip_edittext);
+        ipEntryBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    addNewIp(v);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        // Do something when a list item is clicked
-        Log.i("CustomDevicesActivity", "Item clicked");
+        Log.i("CustomDevicesActivity", "Item clicked pos: "+position+" id: "+id);
+        // remove touched item after confirmation
+        // TODO: add confirmation
+        ipAddressList.remove(position);
+        saveList();
+        ((ArrayAdapter)getListAdapter()).notifyDataSetChanged();
     }
 
+    public void addNewIp(View v) {
+        EditText ipEntryBox = (EditText)findViewById(R.id.ip_edittext);
+        String enteredText = ipEntryBox.getText().toString();
+        // TODO: validate IP address
+
+        ipAddressList.add(enteredText);
+        saveList();
+        // clear entry box
+        ipEntryBox.setText("");
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    void saveList() {
+        // add entry to list and save to preferences
+        String serialized = serializeIpList(ipAddressList);
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putString(
+                KEY_CUSTOM_DEVLIST_PREFERENCE, serialized).commit();
+        ((ArrayAdapter)getListAdapter()).notifyDataSetChanged();
+
+    }
+
+    /*
     private void initPreferences(final ListPreference ipListPref) {
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         ipListPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -78,8 +109,9 @@ public class CustomDevicesActivity extends ListActivity {
                 R.string.custom_device_list_summary,
                 sharedPreferences.getString(KEY_CUSTOM_DEVLIST_PREFERENCE, "")));
     }
+    */
 
-    String serializeIpList(ArrayList<String> iplist) {
+    static String serializeIpList(ArrayList<String> iplist) {
         String serialized = "";
         for (String ipaddr : iplist) {
             serialized += IP_DELIM +ipaddr;
@@ -87,7 +119,7 @@ public class CustomDevicesActivity extends ListActivity {
         return serialized;
     }
 
-    ArrayList<String> deserializeIpList(String serialized) {
+    static ArrayList<String> deserializeIpList(String serialized) {
         ArrayList<String> iplist = new ArrayList<String>();
         for (String ipaddr : serialized.split(IP_DELIM)) {
             iplist.add(ipaddr);
@@ -95,18 +127,22 @@ public class CustomDevicesActivity extends ListActivity {
         return iplist;
     }
 
-    public static void initializeDeviceList(Context context){
-        String deviceList = PreferenceManager.getDefaultSharedPreferences(context).getString(
+    void initializeDeviceList(Context context){
+        String deviceListPrefs = PreferenceManager.getDefaultSharedPreferences(context).getString(
                 KEY_CUSTOM_DEVLIST_PREFERENCE,
                 "");
-        if(deviceList.isEmpty()){
+        if(deviceListPrefs.isEmpty()){
             Log.i("CustomDevicesActivity", "Initialising empty custom device list");
             PreferenceManager.getDefaultSharedPreferences(context).edit().putString(
                     KEY_CUSTOM_DEVLIST_PREFERENCE,
-                    deviceList).commit();
+                    deviceListPrefs).commit();
+        } else {
+            Log.i("CustomDevicesActivity", "Populating device list");
+            ipAddressList = deserializeIpList(deviceListPrefs);
         }
     }
 
+    /*
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class CustomDevicesFragment extends PreferenceFragment {
         @Override
@@ -124,4 +160,5 @@ public class CustomDevicesActivity extends ListActivity {
             }
         }
     }
+    */
 }

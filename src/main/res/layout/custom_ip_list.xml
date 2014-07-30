@@ -14,10 +14,25 @@
         android:layout_weight="1"
     />
 
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/abc_action_bar_default_height"
+            android:text="Enter IP address below and touch button to add.\nTouch an existing item to remove it from the list."/>
+
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/abc_action_bar_default_height"
+            android:inputType="number"
+            android:digits="0123456789."
+            android:imeOptions="actionSend"
+            android:id="@+id/ip_edittext"/>
+
     <Button
             android:layout_width="fill_parent"
             android:layout_height="@dimen/abc_action_bar_default_height"
             android:text="Add IP address"
+            android:onClick="addNewIp"
             android:id="@android:id/button1"/>
+
 
 </LinearLayout>
