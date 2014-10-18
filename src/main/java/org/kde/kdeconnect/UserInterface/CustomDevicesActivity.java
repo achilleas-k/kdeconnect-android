@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class CustomDevicesActivity extends ListActivity {
 
-    private static final String LOGID = "CustomDevicesActivity";
+    private static final String LOG_ID = "CustomDevicesActivity";
     public static final String KEY_CUSTOM_DEVLIST_PREFERENCE  = "device_list_preference";
     private static final String IP_DELIM = "::";
 
@@ -48,7 +48,7 @@ public class CustomDevicesActivity extends ListActivity {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Log.i("CustomDevicesActivity", "Item clicked pos: "+position+" id: "+id);
+        Log.i(LOG_ID, "Item clicked pos: "+position+" id: "+id);
         // remove touched item after confirmation
         // TODO: add confirmation
         ipAddressList.remove(position);
@@ -123,16 +123,16 @@ public class CustomDevicesActivity extends ListActivity {
         }
         // remove first delimiter
         serialized = serialized.substring(IP_DELIM.length());
-        Log.d(LOGID, serialized);
+        Log.d(LOG_ID, serialized);
         return serialized;
     }
 
     static ArrayList<String> deserializeIpList(String serialized) {
         ArrayList<String> iplist = new ArrayList<String>();
-        Log.d(LOGID, serialized);
+        Log.d(LOG_ID, serialized);
         for (String ipaddr : serialized.split(IP_DELIM)) {
             iplist.add(ipaddr);
-            Log.d(LOGID, ipaddr);
+            Log.d(LOG_ID, ipaddr);
         }
         return iplist;
     }
@@ -142,12 +142,12 @@ public class CustomDevicesActivity extends ListActivity {
                 KEY_CUSTOM_DEVLIST_PREFERENCE,
                 "");
         if(deviceListPrefs.isEmpty()){
-            Log.i("CustomDevicesActivity", "Initialising empty custom device list");
+            Log.i(LOG_ID, "Initialising empty custom device list");
             PreferenceManager.getDefaultSharedPreferences(context).edit().putString(
                     KEY_CUSTOM_DEVLIST_PREFERENCE,
                     deviceListPrefs).commit();
         } else {
-            Log.i("CustomDevicesActivity", "Populating device list");
+            Log.i(LOG_ID, "Populating device list");
             ipAddressList = deserializeIpList(deviceListPrefs);
         }
     }
