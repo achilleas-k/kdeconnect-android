@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 public class CustomDevicesActivity extends ListActivity {
 
+    private static final String LOGID = "CustomDevicesActivity";
     public static final String KEY_CUSTOM_DEVLIST_PREFERENCE  = "device_list_preference";
     private static final String IP_DELIM = "::";
 
@@ -57,12 +58,14 @@ public class CustomDevicesActivity extends ListActivity {
 
     public void addNewIp(View v) {
         EditText ipEntryBox = (EditText)findViewById(R.id.ip_edittext);
-        String enteredText = ipEntryBox.getText().toString();
+        String enteredText = ipEntryBox.getText().toString().trim();
         // TODO: validate IP address
-
+        if (!enteredText.equals("")) {
+            // don't add empty string (after trimming)
+            ipAddressList.add(enteredText);
+        }
         // TODO: allow specifying port as well
 
-        ipAddressList.add(enteredText);
         saveList();
         // clear entry box
         ipEntryBox.setText("");
@@ -116,15 +119,20 @@ public class CustomDevicesActivity extends ListActivity {
     static String serializeIpList(ArrayList<String> iplist) {
         String serialized = "";
         for (String ipaddr : iplist) {
-            serialized += IP_DELIM +ipaddr;
+            serialized += IP_DELIM+ipaddr;
         }
+        // remove first delimiter
+        serialized = serialized.substring(IP_DELIM.length());
+        Log.d(LOGID, serialized);
         return serialized;
     }
 
     static ArrayList<String> deserializeIpList(String serialized) {
         ArrayList<String> iplist = new ArrayList<String>();
+        Log.d(LOGID, serialized);
         for (String ipaddr : serialized.split(IP_DELIM)) {
             iplist.add(ipaddr);
+            Log.d(LOGID, ipaddr);
         }
         return iplist;
     }
