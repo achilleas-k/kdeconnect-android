@@ -2,6 +2,7 @@ package org.kde.kdeconnect.Backends.CustomLinkBackend;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.support.v4.util.LongSparseArray;
 
@@ -32,6 +33,7 @@ public class CustomLinkProvider extends BaseLinkProvider {
 
     private final static String LOG_ID = "CustomLinkProvider";
     private final static int port = 1714;
+    public static final String KEY_CUSTOM_DEVLIST_PREFERENCE  = "device_list_preference";
 
     private final Context context;
     private final HashMap<String, CustomLink> visibleComputers = new HashMap<String, CustomLink>();
@@ -245,6 +247,10 @@ public class CustomLinkProvider extends BaseLinkProvider {
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
+                    // TODO: Create an object for (de)serializing deviceList
+                    String deviceListPrefs = PreferenceManager.getDefaultSharedPreferences(context).getString(
+                            KEY_CUSTOM_DEVLIST_PREFERENCE,
+                            "");
                     ArrayList<InetAddress> clientlist = new ArrayList<InetAddress>();
                     clientlist.add(InetAddress.getByAddress(new byte[]{10, 8, 0, 13}));
                     clientlist.add(InetAddress.getByAddress(new byte[]{10, 8, 0, 100}));
