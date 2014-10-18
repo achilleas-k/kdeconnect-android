@@ -30,6 +30,7 @@ import java.util.HashMap;
 
 public class CustomLinkProvider extends BaseLinkProvider {
 
+    private final static String LOG_ID = "CustomLinkProvider";
     private final static int port = 1714;
 
     private final Context context;
@@ -60,12 +61,12 @@ public class CustomLinkProvider extends BaseLinkProvider {
         public void messageReceived(IoSession session, Object message) throws Exception {
             super.messageReceived(session, message);
 
-            //Log.e("CustomLinkProvider","Incoming package, address: "+session.getRemoteAddress()).toString());
-            //Log.e("CustomLinkProvider","Received:"+message);
+            //Log.e(LOG_ID,"Incoming package, address: "+session.getRemoteAddress()).toString());
+            //Log.e(LOG_ID,"Received:"+message);
 
             String theMessage = (String) message;
             if (theMessage.isEmpty()) {
-                Log.e("CustomLinkProvider","Empty package received");
+                Log.e(LOG_ID,"Empty package received");
                 return;
             }
 
@@ -78,7 +79,7 @@ public class CustomLinkProvider extends BaseLinkProvider {
                     return;
                 }
 
-                //Log.e("CustomLinkProvider", "Identity package received from "+np.getString("deviceName"));
+                //Log.e(LOG_ID, "Identity package received from "+np.getString("deviceName"));
 
                 CustomLink link = new CustomLink(session, np.getString("deviceId"), CustomLinkProvider.this);
                 nioSessions.put(session.getId(),link);
@@ -86,7 +87,7 @@ public class CustomLinkProvider extends BaseLinkProvider {
             } else {
                 CustomLink prevLink = nioSessions.get(session.getId());
                 if (prevLink == null) {
-                    Log.e("CustomLinkProvider","2 Expecting an identity package");
+                    Log.e(LOG_ID,"2 Expecting an identity package");
                 } else {
                     prevLink.injectNetworkPackage(np);
                 }
@@ -100,7 +101,7 @@ public class CustomLinkProvider extends BaseLinkProvider {
         public void messageReceived(IoSession udpSession, Object message) throws Exception {
             super.messageReceived(udpSession, message);
 
-            //Log.e("CustomLinkProvider", "Udp message received (" + message.getClass() + ") " + message.toString());
+            //Log.e(LOG_ID, "Udp message received (" + message.getClass() + ") " + message.toString());
 
             try {
                 //We should receive a string thanks to the TextLineCodecFactory filter
@@ -108,7 +109,7 @@ public class CustomLinkProvider extends BaseLinkProvider {
                 final NetworkPackage identityPackage = NetworkPackage.unserialize(theMessage);
 
                 if (!identityPackage.getType().equals(NetworkPackage.PACKAGE_TYPE_IDENTITY)) {
-                    Log.e("CustomLinkProvider", "1 Expecting an identity package");
+                    Log.e(LOG_ID, "1 Expecting an identity package");
                     return;
                 } else {
                     String myId = NetworkPackage.createIdentityPackage(context).getString("deviceId");
@@ -117,7 +118,7 @@ public class CustomLinkProvider extends BaseLinkProvider {
                     }
                 }
 
-                Log.i("CustomLinkProvider", "Identity package received, creating link");
+                Log.i(LOG_ID, "Identity package received, creating link");
 
                 final InetSocketAddress address = (InetSocketAddress) udpSession.getRemoteAddress();
 
@@ -140,7 +141,7 @@ public class CustomLinkProvider extends BaseLinkProvider {
 
                         final CustomLink link = new CustomLink(session, identityPackage.getString("deviceId"), CustomLinkProvider.this);
 
-                        Log.i("CustomLinkProvider", "Connection successful: " + session.isConnected());
+                        Log.i(LOG_ID, "Connection successful: " + session.isConnected());
 
                         new Thread(new Runnable() {
                             @Override
@@ -157,7 +158,7 @@ public class CustomLinkProvider extends BaseLinkProvider {
                 });
 
             } catch (Exception e) {
-                Log.e("CustomLinkProvider","Exception receiving udp package!!");
+                Log.e(LOG_ID,"Exception receiving udp package!!");
                 e.printStackTrace();
             }
 
@@ -166,12 +167,12 @@ public class CustomLinkProvider extends BaseLinkProvider {
 
     private void addLink(NetworkPackage identityPackage, CustomLink link) {
         String deviceId = identityPackage.getString("deviceId");
-        Log.i("CustomLinkProvider","addLink to "+deviceId);
+        Log.i(LOG_ID,"addLink to "+deviceId);
         CustomLink oldLink = visibleComputers.get(deviceId);
         visibleComputers.put(deviceId, link);
         connectionAccepted(identityPackage, link);
         if (oldLink != null) {
-            Log.i("CustomLinkProvider","Removing old connection to same device");
+            Log.i(LOG_ID,"Removing old connection to same device");
             oldLink.disconnect();
             connectionLost(oldLink);
         }
@@ -218,7 +219,7 @@ public class CustomLinkProvider extends BaseLinkProvider {
         try {
             udpAcceptor.bind(new InetSocketAddress(port));
         } catch(Exception e) {
-            Log.e("CustomLinkProvider", "Error: Could not bind udp socket");
+            Log.e(LOG_ID, "Error: Could not bind udp socket");
             e.printStackTrace();
         }
         */
@@ -234,7 +235,7 @@ public class CustomLinkProvider extends BaseLinkProvider {
             }
         }
 
-        Log.i("CustomLinkProvider","Using tcpPort "+tcpPort);
+        Log.i(LOG_ID,"Using tcpPort "+tcpPort);
 
 
         //I'm on a new network, let's be polite and introduce myself
@@ -257,11 +258,11 @@ public class CustomLinkProvider extends BaseLinkProvider {
                         socket.setReuseAddress(true);
                         socket.setBroadcast(true);
                         socket.send(packet);
-                        Log.e("CustomLinkProvider","Udp identity package sent to address "+packet.getAddress());
+                        Log.e(LOG_ID,"Udp identity package sent to address "+packet.getAddress());
                     }
                 } catch(Exception e) {
                     e.printStackTrace();
-                    Log.e("CustomLinkProvider","Sending udp identity package failed");
+                    Log.e(LOG_ID,"Sending udp identity package failed");
                 }
 
                 return null;
