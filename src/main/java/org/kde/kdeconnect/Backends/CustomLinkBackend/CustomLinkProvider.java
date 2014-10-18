@@ -288,7 +288,6 @@ public class CustomLinkProvider extends BaseLinkProvider {
 
     }
 
-    @Override
     public int getPriority() {
         return 1000;
     }
