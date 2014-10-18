@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-  <string name="pref_plugin_telephony">Oznamování telefonie</string>
-  <string name="pref_plugin_telephony_desc">Posílat upozorňování na SMS a hovory</string>
+  <string name="pref_plugin_telephony">Upozornění telefonie</string>
+  <string name="pref_plugin_telephony_desc">Posílat upozornění na SMS a hovory</string>
   <string name="pref_plugin_battery">Hlášení baterie</string>
   <string name="pref_plugin_battery_desc">Periodicky hlásit stav baterky</string>
   <string name="pref_plugin_sftp">Přístup k souborovému systému</string>
@@ -14,7 +14,7 @@
   <string name="pref_plugin_mpris_desc">Ovládejte audio/video z vašeho telefonu</string>
   <string name="pref_plugin_ping">Ping</string>
   <string name="pref_plugin_ping_desc">Posílat a přijímat ping</string>
-  <string name="pref_plugin_notifications">Synchronizace hlášení</string>
+  <string name="pref_plugin_notifications">Synchronizace upozornění</string>
   <string name="pref_plugin_notifications_desc">Zpřístupněte si upozornění z jiných zařízení</string>
   <string name="pref_plugin_sharereceiver">Sdílet příjemce</string>
   <string name="pref_plugin_sharereceiver_desc">Ukládat příchozí soubory do úložiště telefonu</string>
@@ -56,6 +56,7 @@
   <string name="reconnect">Znovu připojit</string>
   <string name="right_click">Poslat kliknutí pravým tlačítkem</string>
   <string name="middle_click">Poslat kliknutí prostředním tlačítkem</string>
+  <string name="show_keyboard">Zobrazit klávesnici</string>
   <string name="device_not_paired">Zařízení není spárované</string>
   <string name="request_pairing">Vyžádat párování</string>
   <string name="pairing_accept">Přijmout</string>
@@ -70,12 +71,31 @@
   <string name="mpris_ff">Rychle vpřed</string>
   <string name="mpris_next">Následující</string>
   <string name="mpris_volume">Hlasitost</string>
+  <string name="mpris_settings">Nastavení multimédií</string>
+  <string name="mpris_time_settings_title">Časový interval</string>
+  <string name="mpris_time_settings_summary">Upravit čas pro rychlý posun multimediálním souborem vpřed a zpět.</string>
   <string name="share_to">Sdílet s...</string>
   <string name="protocol_version_older">Toto zařízení používá starou verzi protokolu</string>
   <string name="protocol_version_newer">Toto zařízení používá novější verzi protokolu</string>
   <string name="general_settings">Obecná nastavení</string>
+  <string name="plugin_settings">Nastavení</string>
   <string name="device_name">Název zařízení</string>
   <string name="device_name_preference_summary">%s</string>
   <string name="invalid_device_name">Neplatný název zařízení</string>
   <string name="shareplugin_text_saved">Přijatý text byl uložen do schránky</string>
+  <string name="share_notification_preference">Hlasitá upozornění</string>
+  <string name="share_notification_preference_summary">Vibrovat a přehrát melodii při přijímání souboru</string>
+  <string name="sftp_internal_storage">Interní úložiště</string>
+  <string name="sftp_all_files">Všechny soubory</string>
+  <string name="sftp_sdcard_num">SD karta %d</string>
+  <string name="sftp_sdcard">SD karta</string>
+  <string name="sftp_readonly">(pouze ke čtení)</string>
+  <string name="sftp_camera">Obrázky z fotoaparátu</string>
+  <string-array name="mpris_time_entries">
+    <item>10 sekund</item>
+    <item>20 sekund</item>
+    <item>30 sekund</item>
+    <item>1 minuta</item>
+    <item>2 minuty</item>
+  </string-array>
 </resources>

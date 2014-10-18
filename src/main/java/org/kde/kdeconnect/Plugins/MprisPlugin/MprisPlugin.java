@@ -30,10 +30,6 @@ public class MprisPlugin extends Plugin {
     private String player = "";
     private boolean playing = false;
 
-    /*static {
-        PluginFactory.registerPlugin(MprisPlugin.class);
-    }*/
-
     @Override
     public String getPluginName() {
         return "plugin_mpris";
@@ -52,6 +48,11 @@ public class MprisPlugin extends Plugin {
     @Override
     public Drawable getIcon() {
         return context.getResources().getDrawable(R.drawable.icon);
+    }
+
+    @Override
+    public boolean hasSettings() {
+        return true;
     }
 
     @Override
@@ -179,6 +180,10 @@ public class MprisPlugin extends Plugin {
         requestPlayerStatus();
     }
 
+    public String getPlayer() {
+        return player;
+    }
+
     public int getVolume() {
         return volume;
     }
@@ -203,7 +208,7 @@ public class MprisPlugin extends Plugin {
     }
 
     @Override
-    public AlertDialog getErrorDialog(Context baseContext) {
+    public AlertDialog getErrorDialog(Activity deviceActivity) {
         return null;
     }
 

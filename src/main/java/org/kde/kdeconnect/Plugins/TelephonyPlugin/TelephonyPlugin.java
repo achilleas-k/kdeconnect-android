@@ -19,10 +19,6 @@ import org.kde.kdeconnect_tp.R;
 
 public class TelephonyPlugin extends Plugin {
 
-    /*static {
-        PluginFactory.registerPlugin(TelephonyPlugin.class);
-    }*/
-
     @Override
     public String getPluginName() {
         return "plugin_telephony";
@@ -46,6 +42,11 @@ public class TelephonyPlugin extends Plugin {
     @Override
     public boolean isEnabledByDefault() {
         return true;
+    }
+
+    @Override
+    public boolean hasSettings() {
+        return false;
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -182,7 +183,7 @@ public class TelephonyPlugin extends Plugin {
     }
 
     @Override
-    public AlertDialog getErrorDialog(Context baseContext) {
+    public AlertDialog getErrorDialog(Activity deviceActivity) {
         return null;
     }
 

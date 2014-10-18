@@ -13,6 +13,7 @@ import org.kde.kdeconnect.Plugins.Plugin;
 import org.kde.kdeconnect_tp.R;
 
 public class MousePadPlugin extends Plugin {
+
     @Override
     public String getPluginName() {
         return "plugin_mousepad";
@@ -39,6 +40,11 @@ public class MousePadPlugin extends Plugin {
     }
 
     @Override
+    public boolean hasSettings() {
+        return false;
+    }
+
+    @Override
     public boolean onCreate() {
         return true;
     }
@@ -54,9 +60,24 @@ public class MousePadPlugin extends Plugin {
     }
 
     @Override
-    public AlertDialog getErrorDialog(Context baseContext) { return null; }
+    public AlertDialog getErrorDialog(Activity deviceActivity) { return null; }
 
-    public void sendPoints(float dx, float dy) {
+    @Override
+    public Button getInterfaceButton(final Activity activity) {
+        Button button = new Button(activity);
+        button.setText(R.string.open_mousepad);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, MousePadActivity.class);
+                intent.putExtra("deviceId", device.getDeviceId());
+                activity.startActivity(intent);
+            }
+        });
+        return button;
+    }
+
+    public void sendMouseDelta(float dx, float dy) {
         NetworkPackage np = new NetworkPackage(NetworkPackage.PACKAGE_TYPE_MOUSEPAD);
         np.set("dx", dx);
         np.set("dy", dy);
@@ -95,18 +116,16 @@ public class MousePadPlugin extends Plugin {
         device.sendPackage(np);
     }
 
-    @Override
-    public Button getInterfaceButton(final Activity activity) {
-        Button button = new Button(activity);
-        button.setText(R.string.open_mousepad);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(activity, MousePadActivity.class);
-                intent.putExtra("deviceId", device.getDeviceId());
-                activity.startActivity(intent);
-            }
-        });
-        return button;
+    public void sendKey(String utfChar) {
+        NetworkPackage np = new NetworkPackage(NetworkPackage.PACKAGE_TYPE_MOUSEPAD);
+        np.set("key", utfChar);
+        device.sendPackage(np);
     }
+
+    public void sendSpecialKey(int specialKey) {
+        NetworkPackage np = new NetworkPackage(NetworkPackage.PACKAGE_TYPE_MOUSEPAD);
+        np.set("specialKey", specialKey);
+        device.sendPackage(np);
+    }
+
 }

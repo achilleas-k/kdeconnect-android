@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.kde.kdeconnect_tp"
-    android:versionCode="720"
-    android:versionName="0.7.2">
+    android:versionCode="730"
+    android:versionName="0.7.3">
 
     <uses-sdk android:minSdkVersion="9"
               android:targetSdkVersion="19" />
@@ -88,6 +88,7 @@
                 android:value="org.kde.kdeconnect.UserInterface.DeviceActivity" />
         </activity>
 
+
         <activity
                 android:name="org.kde.kdeconnect.UserInterface.CustomDevicesActivity"
                 android:label="@string/custom_device_list"
@@ -95,6 +96,16 @@
                 >
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value="org.kde.kdeconnect.UserInterface.DeviceActivity" />
+        </activity>
+
+
+        <activity
+            android:name="org.kde.kdeconnect.UserInterface.PluginSettingsActivity"
+            android:label="@string/mpris_settings"
+            android:parentActivityName="org.kde.kdeconnect.UserInterface.SettingsActivity"
+            >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.kde.kdeconnect.UserInterface.SettingsActivity" />
         </activity>
 
         <receiver android:name="org.kde.kdeconnect.KdeConnectBroadcastReceiver">
@@ -138,6 +149,8 @@
             android:theme="@style/Theme.AppCompat"
             android:name="org.kde.kdeconnect.Plugins.MousePadPlugin.MousePadActivity"
             android:label="@string/remote_control"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="fullSensor"
             android:parentActivityName="org.kde.kdeconnect.UserInterface.DeviceActivity"
             >

@@ -1,8 +1,10 @@
 package org.kde.kdeconnect.Plugins.MousePadPlugin;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.GestureDetector;
+import android.view.inputmethod.InputMethodManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,7 +14,10 @@ import org.kde.kdeconnect.BackgroundService;
 import org.kde.kdeconnect.Device;
 import org.kde.kdeconnect_tp.R;
 
-public class MousePadActivity extends Activity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, MousePadGestureDetector.OnGestureListener {
+public class MousePadActivity extends ActionBarActivity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, MousePadGestureDetector.OnGestureListener {
+
+    String deviceId;
+
     private final static float MinDistanceToSendScroll = 2.5f;
 
     private float mPrevX;
@@ -21,23 +26,28 @@ public class MousePadActivity extends Activity implements GestureDetector.OnGest
     private float mCurrentY;
 
     boolean isScrolling = false;
-
     float accumulatedDistanceY = 0;
 
-    private String deviceId;
-
     private GestureDetector mDetector;
-
     private MousePadGestureDetector mMousePadGestureDetector;
+
+    KeyListenerView keyListenerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_mousepad);
+
         deviceId = getIntent().getStringExtra("deviceId");
+
         mDetector = new GestureDetector(this, this);
         mMousePadGestureDetector = new MousePadGestureDetector(this, this);
         mDetector.setOnDoubleTapListener(this);
+
+        keyListenerView = (KeyListenerView)findViewById(R.id.keyListener);
+        keyListenerView.setDeviceId(deviceId);
     }
 
     @Override
@@ -56,23 +66,27 @@ public class MousePadActivity extends Activity implements GestureDetector.OnGest
             case R.id.menu_middle_click:
                 sendMiddleClick();
                 return true;
+            case R.id.menu_show_keyboard:
+                showKeyboard();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mMousePadGestureDetector.onTouchEvent(event)) {
             return true;
         }
-
         if ( mDetector.onTouchEvent(event) ) {
             return true;
         }
+
         int actionType = event.getAction();
-        final float x = event.getX();
-        final float y = event.getY();
+
         if (isScrolling) {
             if (actionType == MotionEvent.ACTION_UP) {
                 isScrolling = false;
@@ -81,21 +95,22 @@ public class MousePadActivity extends Activity implements GestureDetector.OnGest
 
             }
         }
+
         switch (actionType) {
             case MotionEvent.ACTION_DOWN:
-                mPrevX = x;
-                mPrevY = y;
+                mPrevX = event.getX();
+                mPrevY = event.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                mCurrentX = x;
-                mCurrentY = y;
+                mCurrentX = event.getX();
+                mCurrentY = event.getY();
                 BackgroundService.RunCommand(this, new BackgroundService.InstanceCallback() {
                     @Override
                     public void onServiceStart(BackgroundService service) {
                         Device device = service.getDevice(deviceId);
                         MousePadPlugin mousePadPlugin = (MousePadPlugin)device.getPlugin("plugin_mousepad");
                         if (mousePadPlugin == null) return;
-                        mousePadPlugin.sendPoints(mCurrentX - mPrevX, mCurrentY - mPrevY);
+                        mousePadPlugin.sendMouseDelta(mCurrentX - mPrevX, mCurrentY - mPrevY);
                         mPrevX = mCurrentX;
                         mPrevY = mCurrentY;
                     }
@@ -112,7 +127,7 @@ public class MousePadActivity extends Activity implements GestureDetector.OnGest
 
     @Override
     public void onShowPress(MotionEvent e) {
-
+        //From GestureDetector, left empty
     }
 
     @Override
@@ -152,7 +167,7 @@ public class MousePadActivity extends Activity implements GestureDetector.OnGest
 
     @Override
     public void onLongPress(MotionEvent e) {
-
+        //From GestureDetector, left empty
     }
 
     @Override
@@ -205,6 +220,7 @@ public class MousePadActivity extends Activity implements GestureDetector.OnGest
         return true;
     }
 
+
     private void sendMiddleClick() {
         BackgroundService.RunCommand(this, new BackgroundService.InstanceCallback() {
             @Override
@@ -228,4 +244,11 @@ public class MousePadActivity extends Activity implements GestureDetector.OnGest
             }
         });
     }
+
+    private void showKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInputFromWindow(keyListenerView.getWindowToken(), 0, 0);
+    }
+
 }
+

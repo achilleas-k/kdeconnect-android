@@ -21,10 +21,6 @@ import org.kde.kdeconnect_tp.R;
 
 public class PingPlugin extends Plugin {
 
-    /*static {
-        PluginFactory.registerPlugin(PingPlugin.class);
-    }*/
-
     @Override
     public String getPluginName() {
         return "plugin_ping";
@@ -43,6 +39,11 @@ public class PingPlugin extends Plugin {
     @Override
     public Drawable getIcon() {
         return context.getResources().getDrawable(R.drawable.icon);
+    }
+
+    @Override
+    public boolean hasSettings() {
+        return false;
     }
 
     @Override
@@ -75,18 +76,28 @@ public class PingPlugin extends Plugin {
                 PendingIntent.FLAG_UPDATE_CURRENT
             );
 
+            int id;
+            String message;
+            if (np.has("message")) {
+                message = np.getString("message");
+                id = (int)System.currentTimeMillis();
+            } else {
+                message = "Ping!";
+                id = 42; //A unique id to create only one notification
+            }
+
             Notification noti = new NotificationCompat.Builder(context)
                     .setContentTitle(device.getName())
-                    .setContentText("Ping!")
+                    .setContentText(message)
                     .setContentIntent(resultPendingIntent)
-                    .setTicker("Ping!")
+                    .setTicker(message)
                     .setSmallIcon(android.R.drawable.ic_dialog_alert)
                     .setAutoCancel(true)
-                    .setDefaults(Notification.DEFAULT_SOUND)
+                    .setDefaults(Notification.DEFAULT_ALL)
                     .build();
 
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(42 /*a unique id to create only one notification*/, noti);
+            notificationManager.notify(id, noti);
             return true;
 
         }
@@ -94,7 +105,7 @@ public class PingPlugin extends Plugin {
     }
 
     @Override
-    public AlertDialog getErrorDialog(Context baseContext) {
+    public AlertDialog getErrorDialog(Activity deviceActivity) {
         return null;
     }
 

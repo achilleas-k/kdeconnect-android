@@ -8,10 +8,12 @@ import android.app.PendingIntent;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -31,13 +33,9 @@ import java.io.OutputStream;
 
 public class SharePlugin extends Plugin {
 
-    /*static {
-        PluginFactory.registerPlugin(PingPlugin.class);
-    }*/
-
     @Override
     public String getPluginName() {
-        return "share_ping";
+        return "plugin_share";
     }
 
     @Override
@@ -53,6 +51,11 @@ public class SharePlugin extends Plugin {
     @Override
     public Drawable getIcon() {
         return context.getResources().getDrawable(R.drawable.icon);
+    }
+
+    @Override
+    public boolean hasSettings() {
+        return true;
     }
 
     @Override
@@ -109,6 +112,7 @@ public class SharePlugin extends Plugin {
                         .setSmallIcon(android.R.drawable.ic_dialog_alert)
                         .setAutoCancel(true)
                         .build();
+
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.notify(notificationId, noti);
 
@@ -154,15 +158,23 @@ public class SharePlugin extends Plugin {
                             );
 
                             Resources res = context.getResources();
-                            Notification noti = new NotificationCompat.Builder(context)
+
+                            NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                                     .setContentTitle(res.getString(R.string.received_file_title, device.getName()))
                                     .setContentText(res.getString(R.string.received_file_text, filename))
                                     .setContentIntent(resultPendingIntent)
                                     .setTicker(res.getString(R.string.received_file_title, device.getName()))
                                     .setSmallIcon(android.R.drawable.ic_dialog_alert)
-                                    .setAutoCancel(true)
-                                    .setDefaults(Notification.DEFAULT_SOUND)
-                                    .build();
+                                    .setAutoCancel(true);
+
+
+                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                            if (prefs.getBoolean("share_notification_preference", true)) {
+                                builder.setDefaults(Notification.DEFAULT_ALL);
+                            }
+
+                            Notification noti = builder.build();
+
                             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                             notificationManager.notify(notificationId, noti);
                             
@@ -213,7 +225,7 @@ public class SharePlugin extends Plugin {
                         .setTicker(res.getString(R.string.received_url_title, device.getName()))
                         .setSmallIcon(android.R.drawable.ic_dialog_alert)
                         .setAutoCancel(true)
-                        .setDefaults(Notification.DEFAULT_SOUND)
+                        .setDefaults(Notification.DEFAULT_ALL)
                         .build();
 
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -233,7 +245,7 @@ public class SharePlugin extends Plugin {
     }
 
     @Override
-    public AlertDialog getErrorDialog(Context baseContext) {
+    public AlertDialog getErrorDialog(Activity deviceActivity) {
         return null;
     }
 

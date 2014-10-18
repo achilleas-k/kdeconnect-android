@@ -12,10 +12,6 @@ import org.kde.kdeconnect_tp.R;
 
 public class ClipboardPlugin extends Plugin {
 
-    /*static {
-        PluginFactory.registerPlugin(ClipboardPlugin.class);
-    }*/
-
     @Override
     public String getPluginName() {
         return "plugin_clipboard";
@@ -33,6 +29,11 @@ public class ClipboardPlugin extends Plugin {
     @Override
     public Drawable getIcon() {
         return context.getResources().getDrawable(R.drawable.icon);
+    }
+
+    @Override
+    public boolean hasSettings() {
+        return false;
     }
 
     @Override
@@ -67,7 +68,7 @@ public class ClipboardPlugin extends Plugin {
     }
 
     @Override
-    public AlertDialog getErrorDialog(Context baseContext) { return null; }
+    public AlertDialog getErrorDialog(Activity deviceActivity) { return null; }
 
     @Override
     public Button getInterfaceButton(Activity activity) {

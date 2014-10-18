@@ -51,6 +51,12 @@ public abstract class Plugin {
      */
     public abstract boolean isEnabledByDefault();
 
+
+    /**
+     * Return true if this plugin needs an specific UI settings.
+     */
+    public abstract boolean hasSettings();
+
     /**
      * Initialize the listeners and structures in your plugin.
      * Should return true if initialization was successful.
@@ -73,7 +79,7 @@ public abstract class Plugin {
      * If onCreate returns false, should create a dialog explaining
      * the problem (and how to fix it, if possible) to the user.
      */
-    public abstract AlertDialog getErrorDialog(Context baseContext);
+    public abstract AlertDialog getErrorDialog(Activity deviceActivity);
 
     /**
      * Creates a button that will be displayed in the user interface

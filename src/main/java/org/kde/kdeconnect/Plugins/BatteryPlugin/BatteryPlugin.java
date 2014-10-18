@@ -22,10 +22,6 @@ public class BatteryPlugin extends Plugin {
 
     private NetworkPackage lastInfo = null;
 
-    /*static {
-        PluginFactory.registerPlugin(BatteryPlugin.class);
-    }*/
-
     @Override
     public String getPluginName() {
         return "plugin_battery";
@@ -44,6 +40,11 @@ public class BatteryPlugin extends Plugin {
     @Override
     public Drawable getIcon() {
         return context.getResources().getDrawable(R.drawable.icon);
+    }
+
+    @Override
+    public boolean hasSettings() {
+        return false;
     }
 
     @Override
@@ -113,7 +114,7 @@ public class BatteryPlugin extends Plugin {
     }
 
     @Override
-    public AlertDialog getErrorDialog(Context baseContext) {
+    public AlertDialog getErrorDialog(Activity deviceActivity) {
         return null;
     }
 

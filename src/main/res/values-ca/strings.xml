@@ -56,6 +56,7 @@
   <string name="reconnect">Reconnecta</string>
   <string name="right_click">Envia un clic del botó dret</string>
   <string name="middle_click">Envia un clic del botó del mig</string>
+  <string name="show_keyboard">Mostra el teclat</string>
   <string name="device_not_paired">El dispositiu no està aparellat</string>
   <string name="request_pairing">Demana aparellar</string>
   <string name="pairing_accept">Accepta</string>
@@ -70,12 +71,31 @@
   <string name="mpris_ff">Avanç ràpid</string>
   <string name="mpris_next">Següent</string>
   <string name="mpris_volume">Volum</string>
+  <string name="mpris_settings">Arranjament multimèdia</string>
+  <string name="mpris_time_settings_title">Interval de temps</string>
+  <string name="mpris_time_settings_summary">Ajusta el temps per avançar o rebobinar un fitxer multimèdia.</string>
   <string name="share_to">Comparteix amb...</string>
   <string name="protocol_version_older">Aquest dispositiu usa una versió antiga del protocol</string>
   <string name="protocol_version_newer">Aquest dispositiu usa una versió nova del protocol</string>
   <string name="general_settings">Arranjament general</string>
+  <string name="plugin_settings">Arranjament</string>
   <string name="device_name">Nom del dispositiu</string>
   <string name="device_name_preference_summary">%s</string>
   <string name="invalid_device_name">El nom del dispositiu no és vàlid</string>
   <string name="shareplugin_text_saved">S\'ha rebut text i s\'ha desat al porta-retalls</string>
+  <string name="share_notification_preference">Rebombori de les notificacions</string>
+  <string name="share_notification_preference_summary">Vibra i reprodueix un so en rebre un fitxer</string>
+  <string name="sftp_internal_storage">Emmagatzematge intern</string>
+  <string name="sftp_all_files">Tots els fitxers</string>
+  <string name="sftp_sdcard_num">Targeta SD %d</string>
+  <string name="sftp_sdcard">Targeta SD</string>
+  <string name="sftp_readonly">(només de lectura)</string>
+  <string name="sftp_camera">Imatges de la càmera</string>
+  <string-array name="mpris_time_entries">
+    <item>10 segons</item>
+    <item>20 segons</item>
+    <item>30 segons</item>
+    <item>1 minut</item>
+    <item>2 minuts</item>
+  </string-array>
 </resources>
