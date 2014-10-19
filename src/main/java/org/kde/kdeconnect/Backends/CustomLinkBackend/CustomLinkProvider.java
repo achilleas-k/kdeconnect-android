@@ -248,17 +248,15 @@ public class CustomLinkProvider extends BaseLinkProvider {
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
-                    // TODO: Create an object for (de)serializing deviceList
                     String deviceListPrefs = PreferenceManager.getDefaultSharedPreferences(context).getString(
-                            KEY_CUSTOM_DEVLIST_PREFERENCE,
-                            "");
+                            KEY_CUSTOM_DEVLIST_PREFERENCE, "");
+                    if (deviceListPrefs.isEmpty()) return null;  // do nothing if list is empty
                     ArrayList<String> iplist = CustomDevicesActivity.deserializeIpList(deviceListPrefs);
                     ArrayList<InetAddress> clientlist = new ArrayList<InetAddress>();
                     for (String ipstr : iplist) {
                         clientlist.add(InetAddress.getByName(ipstr));
                     }
                     for (InetAddress client : clientlist) {
-
                         NetworkPackage identity = NetworkPackage.createIdentityPackage(context);
                         identity.set("tcpPort", finalTcpPort);
                         byte[] b = identity.serialize().getBytes("UTF-8");
