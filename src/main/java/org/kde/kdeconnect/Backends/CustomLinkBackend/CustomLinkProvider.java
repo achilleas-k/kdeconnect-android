@@ -247,30 +247,27 @@ public class CustomLinkProvider extends BaseLinkProvider {
         new AsyncTask<Void,Void,Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                try {
                     String deviceListPrefs = PreferenceManager.getDefaultSharedPreferences(context).getString(
                             KEY_CUSTOM_DEVLIST_PREFERENCE, "");
                     if (deviceListPrefs.isEmpty()) return null;  // do nothing if list is empty
                     ArrayList<String> iplist = CustomDevicesActivity.deserializeIpList(deviceListPrefs);
-                    ArrayList<InetAddress> clientlist = new ArrayList<InetAddress>();
                     for (String ipstr : iplist) {
-                        clientlist.add(InetAddress.getByName(ipstr));
+                        try {
+                            InetAddress client = InetAddress.getByName(ipstr);
+                            NetworkPackage identity = NetworkPackage.createIdentityPackage(context);
+                            identity.set("tcpPort", finalTcpPort);
+                            byte[] b = identity.serialize().getBytes("UTF-8");
+                            DatagramPacket packet = new DatagramPacket(b, b.length, client, port);
+                            DatagramSocket socket = new DatagramSocket();
+                            socket.setReuseAddress(true);
+                            socket.setBroadcast(true);
+                            socket.send(packet);
+                            Log.e(LOG_ID,"Udp identity package sent to address "+packet.getAddress());
+                        } catch(Exception e) {
+                            //e.printStackTrace();
+                            Log.e(LOG_ID,"Sending udp identity package failed. Invalid address?");
+                        }
                     }
-                    for (InetAddress client : clientlist) {
-                        NetworkPackage identity = NetworkPackage.createIdentityPackage(context);
-                        identity.set("tcpPort", finalTcpPort);
-                        byte[] b = identity.serialize().getBytes("UTF-8");
-                        DatagramPacket packet = new DatagramPacket(b, b.length, client, port);
-                        DatagramSocket socket = new DatagramSocket();
-                        socket.setReuseAddress(true);
-                        socket.setBroadcast(true);
-                        socket.send(packet);
-                        Log.e(LOG_ID,"Udp identity package sent to address "+packet.getAddress());
-                    }
-                } catch(Exception e) {
-                    e.printStackTrace();
-                    Log.e(LOG_ID,"Sending udp identity package failed");
-                }
 
                 return null;
 
