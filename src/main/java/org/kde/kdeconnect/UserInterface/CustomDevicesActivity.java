@@ -22,7 +22,7 @@ public class CustomDevicesActivity extends ListActivity {
 
     private static final String LOG_ID = "CustomDevicesActivity";
     public static final String KEY_CUSTOM_DEVLIST_PREFERENCE  = "device_list_preference";
-    private static final String IP_DELIM = "::";
+    private static final String IP_DELIM = ",";
 
     ArrayList<String> ipAddressList = new ArrayList<String>();
 
@@ -60,7 +60,6 @@ public class CustomDevicesActivity extends ListActivity {
     public void addNewIp(View v) {
         EditText ipEntryBox = (EditText)findViewById(R.id.ip_edittext);
         String enteredText = ipEntryBox.getText().toString().trim();
-        // TODO: validate IP address
         if (!enteredText.equals("")) {
             // don't add empty string (after trimming)
             ipAddressList.add(enteredText);
