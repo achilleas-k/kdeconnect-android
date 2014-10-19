@@ -20,6 +20,7 @@ import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.kde.kdeconnect.Backends.BaseLinkProvider;
 import org.kde.kdeconnect.NetworkPackage;
+import org.kde.kdeconnect.UserInterface.CustomDevicesActivity;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -251,9 +252,11 @@ public class CustomLinkProvider extends BaseLinkProvider {
                     String deviceListPrefs = PreferenceManager.getDefaultSharedPreferences(context).getString(
                             KEY_CUSTOM_DEVLIST_PREFERENCE,
                             "");
+                    ArrayList<String> iplist = CustomDevicesActivity.deserializeIpList(deviceListPrefs);
                     ArrayList<InetAddress> clientlist = new ArrayList<InetAddress>();
-                    clientlist.add(InetAddress.getByAddress(new byte[]{10, 8, 0, 13}));
-                    clientlist.add(InetAddress.getByAddress(new byte[]{10, 8, 0, 100}));
+                    for (String ipstr : iplist) {
+                        clientlist.add(InetAddress.getByName(ipstr));
+                    }
                     for (InetAddress client : clientlist) {
 
                         NetworkPackage identity = NetworkPackage.createIdentityPackage(context);

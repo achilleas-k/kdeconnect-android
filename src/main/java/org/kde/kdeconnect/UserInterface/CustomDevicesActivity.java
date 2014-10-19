@@ -52,6 +52,7 @@ public class CustomDevicesActivity extends ListActivity {
         // remove touched item after confirmation
         // TODO: add confirmation
         ipAddressList.remove(position);
+        Log.i(LOG_ID, "Removed item pos: "+position+" id: "+id);
         saveList();
         ((ArrayAdapter)getListAdapter()).notifyDataSetChanged();
     }
@@ -77,8 +78,11 @@ public class CustomDevicesActivity extends ListActivity {
     }
 
     void saveList() {
-        // add entry to list and save to preferences
-        String serialized = serializeIpList(ipAddressList);
+        // add entry to list and save to preferences (unless empty)
+        String serialized = "";
+        if (!ipAddressList.isEmpty()) {
+            serialized = serializeIpList(ipAddressList);
+        }
         PreferenceManager.getDefaultSharedPreferences(this).edit().putString(
                 KEY_CUSTOM_DEVLIST_PREFERENCE, serialized).commit();
         ((ArrayAdapter)getListAdapter()).notifyDataSetChanged();
@@ -127,7 +131,7 @@ public class CustomDevicesActivity extends ListActivity {
         return serialized;
     }
 
-    static ArrayList<String> deserializeIpList(String serialized) {
+    public static ArrayList<String> deserializeIpList(String serialized) {
         ArrayList<String> iplist = new ArrayList<String>();
         Log.d(LOG_ID, serialized);
         for (String ipaddr : serialized.split(IP_DELIM)) {
