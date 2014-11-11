@@ -19,13 +19,18 @@ import java.util.Set;
 
 public class SettingsActivity extends PreferenceActivity {
 
+    static private String deviceId; //Static because if we get here by using the back button in the action bar, the extra deviceId will not be set.
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final PreferenceScreen preferenceScreen = getPreferenceManager().createPreferenceScreen(this);
         setPreferenceScreen(preferenceScreen);
 
-        final String deviceId = getIntent().getStringExtra("deviceId");
+        if (getIntent().hasExtra("deviceId")) {
+            deviceId = getIntent().getStringExtra("deviceId");
+        }
+
         BackgroundService.RunCommand(getApplicationContext(), new BackgroundService.InstanceCallback() {
             @Override
             public void onServiceStart(BackgroundService service) {
@@ -48,8 +53,7 @@ public class SettingsActivity extends PreferenceActivity {
                     if (info.hasSettings()) {
                         final Preference pluginPreference = new Preference(getBaseContext());
                         pluginPreference.setKey(pluginName + getString(R.string.plugin_settings_key));
-                        pluginPreference.setTitle(info.getDisplayName());
-                        pluginPreference.setSummary(R.string.plugin_settings);
+                        pluginPreference.setSummary(getString(R.string.plugin_settings_with_name, info.getDisplayName()));
                         preferences.add(pluginPreference);
                         preferenceScreen.addPreference(pluginPreference);
                         pluginPreference.setDependency(pref.getKey());
