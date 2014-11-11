@@ -1,16 +1,20 @@
 package org.kde.kdeconnect.UserInterface;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -47,13 +51,28 @@ public class CustomDevicesActivity extends ListActivity {
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(ListView l, View v, final int position, final long id) {
         Log.i(LOG_ID, "Item clicked pos: "+position+" id: "+id);
         // remove touched item after confirmation
-        // TODO: add confirmation
-        ipAddressList.remove(position);
-        Log.i(LOG_ID, "Removed item pos: "+position+" id: "+id);
-        saveList();
+        DialogInterface.OnClickListener confirmationListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        ipAddressList.remove(position);
+                        Log.i(LOG_ID, "Removed item pos: "+position+" id: "+id);
+                        saveList();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Delete "+ipAddressList.get(position)+" ?");
+        builder.setPositiveButton("Yes", confirmationListener);
+        builder.setNegativeButton("No", confirmationListener);
+        builder.show();
         ((ArrayAdapter)getListAdapter()).notifyDataSetChanged();
     }
 
