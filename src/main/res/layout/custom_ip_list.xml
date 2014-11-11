@@ -16,8 +16,8 @@
 
     <TextView
             android:layout_width="fill_parent"
-            android:layout_height="@dimen/abc_action_bar_default_height"
-            android:text="Enter IP address or hostname below and touch the button to add it to the list. Touch an existing item to remove it from the list."/>
+            android:layout_height="100dp"
+            android:text="@string/custom_dev_list_help"/>
 
     <EditText
             android:layout_width="fill_parent"
@@ -28,7 +28,7 @@
     <Button
             android:layout_width="fill_parent"
             android:layout_height="@dimen/abc_action_bar_default_height"
-            android:text="Add host/IP"
+            android:text="@string/add_host"
             android:onClick="addNewIp"
             android:id="@android:id/button1"/>
 
