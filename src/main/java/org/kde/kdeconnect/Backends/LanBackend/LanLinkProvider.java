@@ -283,7 +283,7 @@ public class LanLinkProvider extends BaseLinkProvider {
                         socket.setReuseAddress(true);
                         socket.setBroadcast(true);
                         socket.send(packet);
-                        Log.i("LanLinkProvider","Udp identity package sent to address "+packet.getAddress());
+                        //Log.i("LanLinkProvider","Udp identity package sent to address "+packet.getAddress());
                     } catch(Exception e) {
                         e.printStackTrace();
                         Log.e("LanLinkProvider","Sending udp identity package failed. Invalid address? ("+ipstr+")");

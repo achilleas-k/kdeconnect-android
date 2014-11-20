@@ -139,24 +139,4 @@ public class CustomDevicesActivity extends ListActivity {
             ipAddressList = deserializeIpList(deviceListPrefs);
         }
     }
-
-    /*
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class CustomDevicesFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.general_preferences);
-        }
-
-        @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            if (getActivity() != null) {
-                ((CustomDevicesActivity)getActivity()).initPreferences(
-                        (ListPreference) findPreference(KEY_CUSTOM_DEVLIST_PREFERENCE));
-            }
-        }
-    }
-    */
 }
