@@ -9,12 +9,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -83,7 +81,6 @@ public class CustomDevicesActivity extends ListActivity {
             // don't add empty string (after trimming)
             ipAddressList.add(enteredText);
         }
-        // TODO: allow specifying port as well
 
         saveList();
         // clear entry box
@@ -106,37 +103,6 @@ public class CustomDevicesActivity extends ListActivity {
         ((ArrayAdapter)getListAdapter()).notifyDataSetChanged();
 
     }
-
-    /*
-    private void initPreferences(final ListPreference ipListPref) {
-        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        ipListPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newCustomIp) {
-                if (newCustomIp.toString().isEmpty()) {
-                    return false;
-                } else {
-                    Log.i("CustomDevicesActivity", "New IP address: " + newCustomIp);
-                    ipListPref.setSummary(getString(
-                            R.string.custom_device_list_summary,
-                            newCustomIp.toString()));
-
-                    //Broadcast the device information again since it has changed
-                    BackgroundService.RunCommand(CustomDevicesActivity.this, new BackgroundService.InstanceCallback() {
-                        @Override
-                        public void onServiceStart(BackgroundService service) {
-                            service.onNetworkChange();
-                        }
-                    });
-                    return true;
-                }
-            }
-        });
-        ipListPref.setSummary(getString(
-                R.string.custom_device_list_summary,
-                sharedPreferences.getString(KEY_CUSTOM_DEVLIST_PREFERENCE, "")));
-    }
-    */
 
     static String serializeIpList(ArrayList<String> iplist) {
         String serialized = "";
