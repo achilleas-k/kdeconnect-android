@@ -13,7 +13,6 @@ import android.util.Log;
 
 import org.kde.kdeconnect.Backends.BaseLink;
 import org.kde.kdeconnect.Backends.BaseLinkProvider;
-import org.kde.kdeconnect.Backends.CustomLinkBackend.CustomLinkProvider;
 import org.kde.kdeconnect.Backends.LanBackend.LanLinkProvider;
 import org.kde.kdeconnect.UserInterface.MainSettingsActivity;
 
@@ -74,9 +73,6 @@ public class BackgroundService extends Service {
 
         if (settings.getBoolean("lan_link", true)) {
             linkProviders.add(new LanLinkProvider(this));
-        }
-        if (settings.getBoolean("custom_link", true)) {
-            linkProviders.add(new CustomLinkProvider(this));
         }
 
     }
