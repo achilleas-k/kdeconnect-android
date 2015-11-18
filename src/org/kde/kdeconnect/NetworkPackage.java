@@ -62,6 +62,7 @@ public class NetworkPackage {
     public static final String PACKAGE_TYPE_CAPABILITIES = "kdeconnect.capabilities";
     public final static String PACKAGE_TYPE_FINDMYPHONE = "kdeconnect.findmyphone" ;
     public final static String PACKAGE_TYPE_RUNCOMMAND = "kdeconnect.runcommand";
+    public final static String PACKAGE_TYPE_MACRO = "kdeconnect.macro";
 
     private long mId;
     private String mType;
