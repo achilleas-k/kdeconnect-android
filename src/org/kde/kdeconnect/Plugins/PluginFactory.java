@@ -37,6 +37,7 @@ import org.kde.kdeconnect.Plugins.PingPlugin.PingPlugin;
 import org.kde.kdeconnect.Plugins.SharePlugin.SharePlugin;
 import org.kde.kdeconnect.Plugins.TelepathyPlugin.TelepathyPlugin;
 import org.kde.kdeconnect.Plugins.TelephonyPlugin.TelephonyPlugin;
+import org.kde.kdeconnect.Plugins.MacroPlugin.MacroPlugin;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -125,6 +126,7 @@ public class PluginFactory {
         PluginFactory.registerPlugin(TelepathyPlugin.class);
         PluginFactory.registerPlugin(FindMyPhonePlugin.class);
         PluginFactory.registerPlugin(RunCommandPlugin.class);
+        PluginFactory.registerPlugin(MacroPlugin.class);
     }
 
     public static PluginInfo getPluginInfo(Context context, String pluginKey) {
